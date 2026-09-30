@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- given-names: "Neural Dynamics accelerator at the Allen Institute"
+- name: "Neural Dynamics accelerator at the Allen Institute"
 title: "slap2-processing-library"
 version: "v0.0.0"
 date-released: 2026-09-30

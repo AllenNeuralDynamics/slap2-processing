@@ -23,8 +23,10 @@ jobs:
       run: uv sync
     - name: Check docstring coverage
       run: uv run interrogate --verbose
-    - name: Run format checks
+    - name: Run lint checks
       run: uv run ruff check
+    - name: Run format checks
+      run: uv run ruff format --check
     - name: Check tests and test coverage
       run: uv run pytest
 

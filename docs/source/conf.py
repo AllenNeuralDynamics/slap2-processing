@@ -8,18 +8,16 @@ from datetime import date
 
 # -- Path Setup --------------------------------------------------------------
 from importlib.metadata import version as get_version
-from os.path import abspath, dirname
-from pathlib import Path
 
 current_year = date.today().year
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = Path(dirname(dirname(dirname(abspath(__file__))))).name
+project = "slap2-processing-library"
 copyright = f"{current_year}, Neural Dynamics accelerator at the Allen Institute"
 author = "Neural Dynamics accelerator at the Allen Institute"
-release = get_version()
+release = get_version("slap2-processing-library")
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

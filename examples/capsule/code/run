@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Code Ocean run script for the single SLAP2 capsule. The first argument selects the step;
+# the rest are the step's --param=value settings, for example from the app panel or a
+# Nextflow process.
+set -euo pipefail
+
+pip list  # stdout only: root-level /results files collide across pipeline tasks
+exec slap2 "$@"
