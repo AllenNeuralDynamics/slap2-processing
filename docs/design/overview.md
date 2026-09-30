@@ -11,16 +11,15 @@ repositories are replaced by one capsule that calls this library.
 
 ## Structure
 
-- **Steps are the primary axis:** `conversion`, `motion_correction`, `annotation`,
-  `source_extraction`, `qc`, `nwb`.
+- **Steps are the primary axis:** `motion_correction`, `source_extraction`, `qc`, `nwb`.
+  Annotation (manual ROI drawing) is an input to source extraction, not a step, and the
+  `.dat` to `.tif` conversion tool is deferred.
 - **Scan mode is dispatched inside each step**, because the algorithms differ:
 
   | Step | Multi-ROI raster | Band scan | Integration (voltage) |
   |---|---|---|---|
   | motion_correction | `MultiRoiRegistration` | `BandRegistration` | unsupported |
-  | annotation | `annotateROIs` / `drawROIs` | band ROI annotation (GIAnT-Python) | unsupported |
   | source_extraction | `SILo` | BandSILo (GIAnT-Python `implement-bandsilo`) | unsupported: needs MBF's `Trace` backend |
-  | conversion | `getImages` + `interpFrames` | `getImages` | unsupported |
   | qc, nwb | Python only | Python only | not planned yet |
 
 - **Backends.** Every step registers implementations per `(scan_mode, backend)` in a
@@ -34,7 +33,7 @@ repositories are replaced by one capsule that calls this library.
 - **One capsule, one entry point.** `slap2 <step> --param=value ...` runs any step.
   - A single Code Ocean capsule repository installs this library at one pinned commit.
   - A hand-written Nextflow DSL2 pipeline calls that capsule once per step, with different CLI
-    parameters (see `examples/capsule/code/run`).
+    parameters, for example `slap2 motion_correction --scan_mode=band_scan`.
   - Settings classes are top-level pydantic-settings models, so `auto-app-panel` can generate
     the app panel.
   - Failures raise, so the capsule exits non-zero.
@@ -91,7 +90,7 @@ tolerances. NMF traces are compared statistically, because Python optimizers do 
 
 ## GIAnT-Python retirement
 
-- Migrate the band-scan code from `implement-bandsilo` into `source_extraction` and `annotation`,
+- Migrate the band-scan code from `implement-bandsilo` into `source_extraction`,
   with its tests. It is MIT-licensed, so keep its copyright notice.
 - Point the production band-annotation capsule, which pins `implement-bandsilo`, at this library.
 - Archive GIAnT-Python with a README pointer to this repository.
