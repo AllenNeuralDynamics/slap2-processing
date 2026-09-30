@@ -1,0 +1,18 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: 6243d25
+_src_path: https://github.com/AllenNeuralDynamics/python-templates
+author_name: Neural Dynamics accelerator at the Allen Institute
+initial_version: 0.0.0
+level_of_support: Supported
+max_python_target_version: '3.13'
+min_python_target_version: '3.12'
+package_name: slap2_processing_library
+project_created_date: '2026-09-30'
+project_description: 'SLAP2 processing library: file conversion, motion correction,
+    annotation, source extraction, QC, and NWB packaging for SLAP2 two-photon imaging'
+project_name: slap2-processing-library
+project_url: https://github.com/AllenNeuralDynamics/slap2-processing-library
+release_type: GitHub
+repo_visibility: internal
+template_type: library-template
+
