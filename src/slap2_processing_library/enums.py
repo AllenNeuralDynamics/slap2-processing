@@ -31,9 +31,7 @@ class Backend(StrEnum):
 class Step(StrEnum):
     """Processing steps provided by the library."""
 
-    CONVERSION = "conversion"
     MOTION_CORRECTION = "motion_correction"
-    ANNOTATION = "annotation"
     SOURCE_EXTRACTION = "source_extraction"
     QC = "qc"
     NWB = "nwb"

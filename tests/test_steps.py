@@ -8,7 +8,7 @@ import pytest
 from slap2_processing_library.enums import Backend, ScanMode, Step
 from slap2_processing_library.steps import NotPortedError, UnsupportedCombinationError
 
-MATLAB_STEPS = (Step.MOTION_CORRECTION, Step.ANNOTATION, Step.SOURCE_EXTRACTION)
+MATLAB_STEPS = (Step.MOTION_CORRECTION, Step.SOURCE_EXTRACTION)
 PORTED_MODES = (ScanMode.MULTI_ROI_RASTER, ScanMode.BAND_SCAN)
 
 

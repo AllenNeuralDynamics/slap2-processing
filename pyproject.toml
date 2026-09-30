@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "slap2-processing-library"
-description = "SLAP2 processing library: file conversion, motion correction, annotation, source extraction, QC, and NWB packaging for SLAP2 two-photon imaging"
+description = "SLAP2 processing library: motion correction, source extraction, QC, and NWB packaging for SLAP2 two-photon imaging"
 license = "MIT"
 requires-python = ">=3.12,<3.14"
 authors = [
@@ -26,9 +26,7 @@ dependencies = [
 
 [project.scripts]
 slap2 = "slap2_processing_library.cli:main"
-slap2-convert = "slap2_processing_library.conversion.cli:main"
 slap2-motion-correction = "slap2_processing_library.motion_correction.cli:main"
-slap2-annotation = "slap2_processing_library.annotation.cli:main"
 slap2-source-extraction = "slap2_processing_library.source_extraction.cli:main"
 slap2-qc = "slap2_processing_library.qc.cli:main"
 slap2-nwb = "slap2_processing_library.nwb.cli:main"

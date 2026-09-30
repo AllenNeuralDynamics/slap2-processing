@@ -9,8 +9,8 @@
 ![support](https://img.shields.io/badge/support-supported-brightgreen) 
 
 
-One Python library for all SLAP2 processing: file conversion, motion correction, annotation,
-source extraction, QC, and NWB packaging, for multi-ROI raster and band-scan data.
+One Python library for all SLAP2 processing: motion correction, source extraction, QC, and
+NWB packaging, for multi-ROI raster and band-scan data.
 
 > **Status: skeleton.** Every step's interface, settings, and backend dispatch exist. MATLAB
 > backends call the pinned GIAnT-MATLAB through a subprocess bridge whose entry points are
@@ -36,9 +36,7 @@ src/slap2_processing_library/
   enums.py             ScanMode, Backend, Step
   identity.py          library version for provenance
   matlab/              GIAnT-MATLAB pins, subprocess bridge, .m entry points (deleted after the port)
-  conversion/          .dat + .meta to .tif, apply motion correction to .dat
   motion_correction/   MultiRoiRegistration (raster), BandRegistration (band scan)
-  annotation/          soma and ROI annotation
   source_extraction/   SILo (raster), BandSILo (band scan)
   qc/                  quality_control.json per step
   nwb/                 slap2.nwb.zarr packaging
