@@ -1,13 +1,13 @@
-"""Command-line entry point for the motion correction step."""
+"""Entry point for the motion correction step."""
 
 from collections.abc import Sequence
 
-from slap2_processing_library.motion_correction.backends import REGISTRY
+from slap2_processing_library.motion_correction.core import run
 from slap2_processing_library.motion_correction.settings import MotionCorrectionSettings
-from slap2_processing_library.steps import StepResult, cli_main
+from slap2_processing_library.steps import StepResult, parse_settings
 
 
-def main(argv: Sequence[str] | None = None) -> list[StepResult]:
+def main(argv: Sequence[str] | None = None) -> StepResult:
     """Run the motion correction step from command-line arguments.
 
     Parameters
@@ -17,7 +17,7 @@ def main(argv: Sequence[str] | None = None) -> list[StepResult]:
 
     Returns
     -------
-    list of StepResult
-        Results of the run.
+    StepResult
+        Outputs of the step.
     """
-    return cli_main(MotionCorrectionSettings, REGISTRY, argv)
+    return run(parse_settings(MotionCorrectionSettings, argv))

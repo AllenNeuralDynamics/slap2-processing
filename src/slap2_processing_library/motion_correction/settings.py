@@ -2,10 +2,10 @@
 
 from pydantic import Field
 
-from slap2_processing_library.steps import MatlabStepSettings
+from slap2_processing_library.steps import StepSettings
 
 
-class MotionCorrectionSettings(MatlabStepSettings):
+class MotionCorrectionSettings(StepSettings):
     """Settings for the motion correction step."""
 
     align_hz: float = Field(default=80.0, description="Rate of the motion estimate, in Hz.")

@@ -1,13 +1,13 @@
-"""Command-line entry point for the nwb step."""
+"""Entry point for the nwb step."""
 
 from collections.abc import Sequence
 
-from slap2_processing_library.nwb.backends import REGISTRY
+from slap2_processing_library.nwb.core import run
 from slap2_processing_library.nwb.settings import NwbSettings
-from slap2_processing_library.steps import StepResult, cli_main
+from slap2_processing_library.steps import StepResult, parse_settings
 
 
-def main(argv: Sequence[str] | None = None) -> list[StepResult]:
+def main(argv: Sequence[str] | None = None) -> StepResult:
     """Run the nwb step from command-line arguments.
 
     Parameters
@@ -17,7 +17,7 @@ def main(argv: Sequence[str] | None = None) -> list[StepResult]:
 
     Returns
     -------
-    list of StepResult
-        Results of the run.
+    StepResult
+        Outputs of the step.
     """
-    return cli_main(NwbSettings, REGISTRY, argv)
+    return run(parse_settings(NwbSettings, argv))

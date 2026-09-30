@@ -22,14 +22,9 @@ repositories are replaced by one capsule that calls this library.
   | source_extraction | `SILo` | BandSILo (GIAnT-Python `implement-bandsilo`) | unsupported: needs MBF's `Trace` backend |
   | qc, nwb | Python only | Python only | not planned yet |
 
-- **Backends.** Every step registers implementations per `(scan_mode, backend)` in a
-  `BackendRegistry`:
-  - `backend=matlab` runs GIAnT-MATLAB.
-  - `backend=python` runs the port.
-  - `backend=both` runs both into `matlab/` and `python/` subdirectories, then runs a parity
-    check.
-
-  A step's settings, CLI and output contract stay the same whichever backend runs.
+- **Per-step files.** `settings.py` holds the step's settings class, `core.py` holds the
+  processing code and its `run` function (which dispatches on scan mode), and `job.py` is the
+  entry point that parses settings and calls `core.run`.
 - **One capsule, one entry point.** `slap2 <step> --param=value ...` runs any step.
   - A single Code Ocean capsule repository installs this library at one pinned commit.
   - A hand-written Nextflow DSL2 pipeline calls that capsule once per step, with different CLI
@@ -40,53 +35,42 @@ repositories are replaced by one capsule that calls this library.
 - **Metadata.** aind-metadata-manager assembles `processing.json` and `quality_control.json`
   downstream. Each step records its code identity from:
   - the installed library version;
-  - the backend's language;
-  - the GIAnT-MATLAB commit, as `Code.core_dependency`, while MATLAB runs.
+  - the library's repository URL.
 
-## MATLAB transition
+## Porting GIAnT-MATLAB
 
-| State | What runs | Default backend |
+This library never runs MATLAB. Production keeps running the existing GIAnT-MATLAB capsules until
+each step's Python port lands here and passes parity, then the pipeline switches that step to
+this library.
+
+| State | Production runs | This library |
 |---|---|---|
-| Before | GIAnT-MATLAB via the bridge; Python owns settings, IO, QC, metadata, NWB | `matlab` |
-| Transition | Per step: `both` on the reference datasets until parity passes, then `python` | per step |
-| After | Python only; `matlab/`, the `.m` entry points and the MATLAB image are deleted | `python` |
+| Before | GIAnT-MATLAB capsules, as today | stubs raise `NotPortedError` |
+| Transition | per step: this library once its port passes parity, MATLAB capsules otherwise | ported steps implemented |
+| After | this library only; GIAnT-MATLAB frozen, MATLAB capsules retired | all steps implemented |
 
-**Bridge** (`matlab/bridge.py`). Python writes a JSON job file and runs `matlab -batch` or a
-compiled MATLAB Runtime executable. It fails on a non-zero exit, then reads the result JSON.
-- There is no `matlab.engine`, so the Python version does not depend on the MATLAB release.
-- Kort Driessen's Linux fix runs trial batches in separate MATLAB processes, because memory grows
-  about 550 MB per trial. Running one subprocess per (DMD, trial) batch is the general form of
-  that fix, and it lets work fan out across pipeline tasks.
+**Port order:**
 
-**Pins** (`matlab/giant.py`):
-- GIAnT-MATLAB `558c1693888cc009a19b2ea1cbb86e24698b8840` on `dev`, the commit that the source
-  extraction and band-scan motion correction capsules run.
-- Slap2DataReader `6f458c0045a982e62eda48f7a63d9c340efcf799`.
-
-Today's capsules use three GIAnT commits and three reader commits; this collapses them to one of
-each. **Open:** which GIAnT commit is the parity reference. Output units and six SILo defaults
-differ between `main` and `dev`.
-
-**Port order.** Each step lands behind `backend=python`, gated by parity:
-
-1. Capture MATLAB golden outputs now, at leaf-function and step level, on 2-3 small datasets.
-2. `.dat` and `.meta` reading, the trial table, and frame reconstruction (`getImages`). This also
-   delivers the `.dat` to `.tif` conversion tool.
+1. Capture MATLAB golden outputs now, while the license exists, at leaf-function and step level,
+   on 2-3 small datasets. They are generated with GIAnT-MATLAB outside this library and stored as
+   versioned data assets.
+2. `.dat` and `.meta` reading, the trial table, and frame reconstruction (`getImages`).
 3. `MultiRoiRegistration`, with its QC metrics (`registrationFailed`, `recNegErr`, motion range).
-4. Applying motion correction to `.dat`. The conversion tool and SILo stage C share this step.
+4. Applying motion correction to `.dat`, which SILo stage C needs.
 5. SILo localization and selection, then the SILo NMF.
 6. `BandRegistration`; band SILo migrates from GIAnT-Python.
 7. GUIs, on a separate track. StripRegistration (NoRMCorre, GPL) is out of scope.
 
-**Parity tiers:**
-- L0: tiny synthetic fixtures with committed MATLAB expectations, run in GitHub CI without
-  MATLAB.
-- L1: step parity on the reference datasets in Code Ocean (`-m data`, `-m matlab`).
+**Parity tiers** (Python output against the stored MATLAB golden outputs):
+- L0: tiny synthetic fixtures with committed MATLAB expectations, run in GitHub CI.
+- L1: step parity on the reference datasets in Code Ocean (`-m data`).
 - L2: end-to-end NWB comparison.
 
 Indices and trial tables must match exactly, and interpolation must match within tight
 tolerances. NMF traces are compared statistically, because Python optimizers do not reproduce
-`fmincon` bit for bit. **Open:** the tolerances, which the scientists sign off.
+`fmincon` bit for bit. **Open:** the tolerances, which the scientists sign off. Per-(DMD, trial)
+entry points let the pipeline fan work out across tasks, which also removes the memory growth
+that Kort Driessen's Linux fix works around.
 
 ## GIAnT-Python retirement
 

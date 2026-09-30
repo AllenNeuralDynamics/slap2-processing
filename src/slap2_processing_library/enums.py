@@ -16,18 +16,6 @@ class ScanMode(StrEnum):
     INTEGRATION = "integration"
 
 
-class Backend(StrEnum):
-    """Implementation that performs a step's numerical work.
-
-    ``matlab`` runs the pinned GIAnT-MATLAB code, ``python`` runs this library's port, and
-    ``both`` runs the two and compares their outputs with the parity checks.
-    """
-
-    MATLAB = "matlab"
-    PYTHON = "python"
-    BOTH = "both"
-
-
 class Step(StrEnum):
     """Processing steps provided by the library."""
 

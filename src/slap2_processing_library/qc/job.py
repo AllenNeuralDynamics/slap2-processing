@@ -1,13 +1,13 @@
-"""Command-line entry point for the qc step."""
+"""Entry point for the qc step."""
 
 from collections.abc import Sequence
 
-from slap2_processing_library.qc.backends import REGISTRY
+from slap2_processing_library.qc.core import run
 from slap2_processing_library.qc.settings import QcSettings
-from slap2_processing_library.steps import StepResult, cli_main
+from slap2_processing_library.steps import StepResult, parse_settings
 
 
-def main(argv: Sequence[str] | None = None) -> list[StepResult]:
+def main(argv: Sequence[str] | None = None) -> StepResult:
     """Run the qc step from command-line arguments.
 
     Parameters
@@ -17,7 +17,7 @@ def main(argv: Sequence[str] | None = None) -> list[StepResult]:
 
     Returns
     -------
-    list of StepResult
-        Results of the run.
+    StepResult
+        Outputs of the step.
     """
-    return cli_main(QcSettings, REGISTRY, argv)
+    return run(parse_settings(QcSettings, argv))

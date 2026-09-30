@@ -4,10 +4,10 @@ from pathlib import Path
 
 from pydantic import Field
 
-from slap2_processing_library.steps import MatlabStepSettings
+from slap2_processing_library.steps import StepSettings
 
 
-class SourceExtractionSettings(MatlabStepSettings):
+class SourceExtractionSettings(StepSettings):
     """Settings for the source extraction step."""
 
     analyze_hz: float = Field(default=200.0, description="Rate traces are extracted at, in Hz.")

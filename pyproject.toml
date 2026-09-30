@@ -26,10 +26,10 @@ dependencies = [
 
 [project.scripts]
 slap2 = "slap2_processing_library.cli:main"
-slap2-motion-correction = "slap2_processing_library.motion_correction.cli:main"
-slap2-source-extraction = "slap2_processing_library.source_extraction.cli:main"
-slap2-qc = "slap2_processing_library.qc.cli:main"
-slap2-nwb = "slap2_processing_library.nwb.cli:main"
+slap2-motion-correction = "slap2_processing_library.motion_correction.job:main"
+slap2-source-extraction = "slap2_processing_library.source_extraction.job:main"
+slap2-qc = "slap2_processing_library.qc.job:main"
+slap2-nwb = "slap2_processing_library.nwb.job:main"
 
 [dependency-groups]
 dev = [
@@ -54,10 +54,9 @@ addopts = [
     "--cov-report=term-missing",
     "--strict-markers",
     "-m",
-    "not matlab and not data",
+    "not data",
 ]
 markers = [
-    "matlab: needs a licensed MATLAB and the pinned GIAnT-MATLAB checkout",
     "data: needs the reference SLAP2 datasets mounted from Code Ocean or S3",
 ]
 

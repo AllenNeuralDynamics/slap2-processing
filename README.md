@@ -12,10 +12,9 @@
 One Python library for all SLAP2 processing: motion correction, source extraction, QC, and
 NWB packaging, for multi-ROI raster and band-scan data.
 
-> **Status: skeleton.** Every step's interface, settings, and backend dispatch exist. MATLAB
-> backends call the pinned GIAnT-MATLAB through a subprocess bridge whose entry points are
-> still stubs, and every Python backend raises `NotPortedError` until its port lands. See
-> [docs/design/overview.md](docs/design/overview.md).
+> **Status: skeleton.** Every step's settings, entry point, and scan-mode dispatch exist. The
+> processing code raises `NotPortedError`, naming the GIAnT code it will port, until each port
+> lands. See [docs/design/overview.md](docs/design/overview.md).
 
 ## Why this repository
 
@@ -32,10 +31,9 @@ NWB packaging, for multi-ROI raster and band-scan data.
 ```
 src/slap2_processing_library/
   cli.py               slap2 <step> --param=value ...   (one entry point for every step)
-  steps.py             StepSettings, BackendRegistry, run_step, the MATLAB step helper
-  enums.py             ScanMode, Backend, Step
+  steps.py             StepSettings, StepResult, errors, settings parsing
+  enums.py             ScanMode, Step
   identity.py          library version for provenance
-  matlab/              GIAnT-MATLAB pins, subprocess bridge, .m entry points (deleted after the port)
   motion_correction/   MultiRoiRegistration (raster), BandRegistration (band scan)
   source_extraction/   SILo (raster), BandSILo (band scan)
   qc/                  quality_control.json per step
@@ -43,16 +41,16 @@ src/slap2_processing_library/
 ```
 
 Each step has `settings.py` (a pydantic-settings class, also the source of the Code Ocean app
-panel), `backends.py` (implementations registered per scan mode and backend), and `cli.py`.
+panel), `core.py` (the processing code, dispatched on scan mode), and `job.py` (the entry point
+that parses settings and calls `core.run`).
 
 ## Usage
 
 One capsule runs any step by passing the step name first:
 
 ```bash
-slap2 motion_correction --scan_mode=multi_roi_raster --backend=matlab
-slap2 source_extraction --scan_mode=band_scan --backend=python --output_dir=/results
-slap2 motion_correction --backend=both   # run MATLAB and Python, then compare them
+slap2 motion_correction --scan_mode=multi_roi_raster
+slap2 source_extraction --scan_mode=band_scan --output_dir=/results
 ```
 
 Each step is also installed as its own command, for example `slap2-motion-correction`.
@@ -74,8 +72,8 @@ uv run ruff format --check # Runs format checks
 uv run pytest # Check tests and test coverage
 ```
 
-Tests marked `matlab` (need a licensed MATLAB) or `data` (need the reference datasets) are
-deselected by default; run them with `uv run pytest -m matlab` or `-m data`.
+Tests marked `data` need the reference datasets and are deselected by default; run them with
+`uv run pytest -m data`.
 
 ## License
 

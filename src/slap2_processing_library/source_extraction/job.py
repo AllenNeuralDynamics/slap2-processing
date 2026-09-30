@@ -1,13 +1,13 @@
-"""Command-line entry point for the source extraction step."""
+"""Entry point for the source extraction step."""
 
 from collections.abc import Sequence
 
-from slap2_processing_library.source_extraction.backends import REGISTRY
+from slap2_processing_library.source_extraction.core import run
 from slap2_processing_library.source_extraction.settings import SourceExtractionSettings
-from slap2_processing_library.steps import StepResult, cli_main
+from slap2_processing_library.steps import StepResult, parse_settings
 
 
-def main(argv: Sequence[str] | None = None) -> list[StepResult]:
+def main(argv: Sequence[str] | None = None) -> StepResult:
     """Run the source extraction step from command-line arguments.
 
     Parameters
@@ -17,7 +17,7 @@ def main(argv: Sequence[str] | None = None) -> list[StepResult]:
 
     Returns
     -------
-    list of StepResult
-        Results of the run.
+    StepResult
+        Outputs of the step.
     """
-    return cli_main(SourceExtractionSettings, REGISTRY, argv)
+    return run(parse_settings(SourceExtractionSettings, argv))

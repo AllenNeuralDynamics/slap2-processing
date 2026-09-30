@@ -13,7 +13,7 @@ from slap2_processing_library.steps import StepResult
 USAGE = "usage: slap2 {" + ",".join(step.value for step in Step) + "} [--param=value ...]"
 
 
-def step_main(step: Step) -> Callable[[Sequence[str] | None], list[StepResult]]:
+def step_main(step: Step) -> Callable[[Sequence[str] | None], StepResult]:
     """Return the ``main`` function of a step's CLI module.
 
     Parameters
@@ -24,12 +24,12 @@ def step_main(step: Step) -> Callable[[Sequence[str] | None], list[StepResult]]:
     Returns
     -------
     Callable
-        The step's ``main(argv)``.
+        The ``main(argv)`` of the step's ``job`` module.
     """
-    return import_module(f"slap2_processing_library.{step.value}.cli").main
+    return import_module(f"slap2_processing_library.{step.value}.job").main
 
 
-def main(argv: Sequence[str] | None = None) -> list[StepResult]:
+def main(argv: Sequence[str] | None = None) -> StepResult:
     """Dispatch to a step's entry point.
 
     Parameters
@@ -39,8 +39,8 @@ def main(argv: Sequence[str] | None = None) -> list[StepResult]:
 
     Returns
     -------
-    list of StepResult
-        Results of the step.
+    StepResult
+        Outputs of the step.
 
     Raises
     ------
